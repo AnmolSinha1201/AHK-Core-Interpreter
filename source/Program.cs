@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace source
+namespace AHKCoreInterpreter
 {
     class Program
     {
