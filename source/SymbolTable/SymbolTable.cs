@@ -1,6 +1,6 @@
-using AHKCoreInterpreter.SymbolTableHelper;
+using AHKCore.SymbolTableHelper;
 
-namespace AHKCoreInterpreter
+namespace AHKCore
 {
 	class SymbolTable
 	{

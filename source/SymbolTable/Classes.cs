@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace AHKCoreInterpreter.SymbolTableHelper
+namespace AHKCore.SymbolTableHelper
 {
 	class Classes
 	{
