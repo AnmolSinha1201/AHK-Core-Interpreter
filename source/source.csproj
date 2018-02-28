@@ -5,4 +5,7 @@
 		<TargetFramework>netcoreapp2.0</TargetFramework>
 		<AssemblyName>AHKCore-Interpreter</AssemblyName>
 	</PropertyGroup>
+	<ItemGroup>
+		<Reference Include="dependencies\AHKCore.dll" />
+	</ItemGroup>
 </Project>
