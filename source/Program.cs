@@ -6,7 +6,8 @@ namespace AHKCore
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var interpreter = new Interpreter();
+            interpreter.Interpret();
         }
     }
 }
