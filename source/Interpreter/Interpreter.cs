@@ -14,14 +14,14 @@ namespace AHKCore
 			var indexedNodes = indexer.IndexNodes(AHKNodes);
 			
 			var visitor = new InterpreterVisitor();
-			visitor.indexed = indexedNodes;
 			var traverser = new AHKCore.NodeTraverser(visitor);
+
+			visitor.indexed = indexedNodes;
+			visitor.traverser = traverser;
 
 			// manually calling objectDispatcher which will call its visitor functions
 			foreach (var o in indexedNodes.AutoExecute)
 				traverser.objectDispatcher(o);
-				
-			Console.WriteLine(indexedNodes.Variables["var1"]);
 		}
 	}
 
@@ -29,5 +29,6 @@ namespace AHKCore
 	{
 		//indexed will manage states
 		public IndexedNode indexed;
+		public NodeTraverser traverser;
 	}
 }
