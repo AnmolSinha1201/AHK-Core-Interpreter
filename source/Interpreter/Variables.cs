@@ -20,7 +20,16 @@ namespace AHKCore
 		
 		public override variableAssignClass variableAssign(variableAssignClass context)
 		{
-			indexed.Variables[context.complexVariable.variable.variableName] = context.expression.extraInfo;
+			if (context.complexVariable.variable.GetType() == typeof(variableClass))
+			{
+				// Console.WriteLine(((variableClass)context.complexVariable.variable).variableName + "=" + context.expression.extraInfo);
+				indexed.Variables[((variableClass)context.complexVariable.variable).variableName] = context.expression.extraInfo;
+			}
+			else //only for bracketUnwrap
+			{
+				// Console.WriteLine(context.complexVariable.variable.extraInfo + "=" + context.expression.extraInfo);
+				indexed.Variables[context.complexVariable.variable.extraInfo.ToString()] = context.expression.extraInfo;
+			}
 			return context;
 		}
 	}
