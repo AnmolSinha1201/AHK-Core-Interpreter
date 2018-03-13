@@ -8,7 +8,7 @@ namespace AHKCore
 		public void Interpret()
 		{
 			var parserInstance = new Parser();
-			var AHKNodes = parserInstance.parse("zxc.qwe=123\nzxc.asd(123)\nclass zxc{asd(varA){varZ=99}}\nasd(123, 456)\nasd(varA, varB=123, varC=789){var1=123\nvar2=456\nvar1=var2}");
+			var AHKNodes = parserInstance.parse("var=zxc()\nzxc(){return 1}\nzxc.qwe=123\nzxc.asd(123)\nclass zxc{asd(varA){varZ=99}}\nasd(123, 456)\nasd(varA, varB=123, varC=789){var1=123\nvar2=456\nvar1=var2}");
 			
 			var indexer = new NodeIndexer();
 			var indexedNodes = indexer.IndexNodes(AHKNodes);

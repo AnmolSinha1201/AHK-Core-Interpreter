@@ -18,7 +18,14 @@ namespace AHKCore
 			function.functionBody = parameterVariableAssignList.Concat(function.functionBody).ToList();
 
 			foreach (var functionNode in function.functionBody)
-				traverser.objectDispatcher(functionNode);
+			{
+				var retVal = traverser.objectDispatcher(functionNode);
+				if (retVal.extraInfo is returnBlockClass r)
+				{
+					context.extraInfo = r;
+					break;
+				}
+			}
 			
 			indexed = oIndexed;
 			return context;
@@ -90,7 +97,16 @@ namespace AHKCore
 				break;
 			}
 
+			if (context.function.extraInfo is returnBlockClass r)
+				context.extraInfo = r.expression;
+
 			indexed = oIndexed;
+			return context;
+		}
+
+		public override returnBlockClass returnBlock(returnBlockClass context)
+		{
+			context.extraInfo = context;
 			return context;
 		}
 	}
