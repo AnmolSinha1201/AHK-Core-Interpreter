@@ -63,5 +63,35 @@ namespace AHKCore
 		{
 			return new variableAssignClass(new complexVariableClass(null, new List<BaseAHKNode>() {name}), "=", expression);
 		}
+
+		public override complexFunctionCallClass complexFunctionCall(complexFunctionCallClass context)
+		{
+			var oIndexed = indexed;
+			foreach(var chainLink  in context.chain)
+			{
+				if (chainLink is variableClass v)
+				{
+					if (indexed.Variables[v.variableName] != null && v.extraInfo is IndexedNode i)
+						indexed = i;
+					else if (indexed.Classes[v.variableName] != null)
+						indexed = indexed.Classes[v.variableName];
+					else {} //throw error
+				}
+			}
+			
+			switch (context.function)
+			{
+				case functionCallClass f:
+					context.function = functionCall(f);
+				break;
+
+				case dotUnwrapClass d:
+					context.function = functionCall((functionCallClass)d.variableOrFunction);
+				break;
+			}
+
+			indexed = oIndexed;
+			return context;
+		}
 	}
 }

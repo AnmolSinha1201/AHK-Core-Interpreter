@@ -1,6 +1,7 @@
 using System;
 using static AHKCore.Nodes;
 using static AHKCore.Query;
+using static AHKCore.IndexedNodesFragment.Variables;
 
 namespace AHKCore
 {
@@ -8,7 +9,31 @@ namespace AHKCore
 	{
 		public override complexVariableClass complexVariable(complexVariableClass context)
 		{
-			context.extraInfo = context.variable.extraInfo;
+			var oIndexed = indexed;
+			foreach(var chainLink  in context.chain)
+			{
+				if (chainLink is variableClass v)
+				{
+					if (indexed.Variables[v.variableName] != null && v.extraInfo is IndexedNode i)
+						indexed = i;
+					else if (indexed.Classes[v.variableName] != null)
+						indexed = indexed.Classes[v.variableName];
+					else {} //throw error
+				}
+			}
+			
+			switch(context.variable)
+			{
+				case variableClass v:
+					context.variable = variable(v);
+				break;
+
+				case dotUnwrapClass d:
+					context.variable = variable((variableClass)d.variableOrFunction);
+				break;
+			}
+
+			indexed = oIndexed;
 			return context;
 		}
 
@@ -20,15 +45,15 @@ namespace AHKCore
 		
 		public override variableAssignClass variableAssign(variableAssignClass context)
 		{
-			if (context.complexVariable.variable.GetType() == typeof(variableClass))
+			if (context.expression is complexVariableClass c) //used for variable to variable assigns
 			{
-				// Console.WriteLine(((variableClass)context.complexVariable.variable).variableName + "=" + context.expression.extraInfo);
-				indexed.Variables[((variableClass)context.complexVariable.variable).variableName] = context.expression.extraInfo;
+				Console.WriteLine(((variableClass)context.complexVariable.variable).variableName + "=" +((VariableValue)c.variable.extraInfo).Value);
+				((VariableValue)context.complexVariable.variable.extraInfo).Value = ((VariableValue)c.variable.extraInfo).Value;
 			}
-			else //only for bracketUnwrap
+			else
 			{
-				// Console.WriteLine(context.complexVariable.variable.extraInfo + "=" + context.expression.extraInfo);
-				indexed.Variables[context.complexVariable.variable.extraInfo.ToString()] = context.expression.extraInfo;
+				Console.WriteLine(((variableClass)context.complexVariable.variable).variableName + "=" + context.expression.extraInfo);
+				((VariableValue)context.complexVariable.variable.extraInfo).Value = context.expression.extraInfo;
 			}
 			return context;
 		}
