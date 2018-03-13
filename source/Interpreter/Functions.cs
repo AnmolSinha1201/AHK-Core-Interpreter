@@ -71,7 +71,7 @@ namespace AHKCore
 			{
 				if (chainLink is variableClass v)
 				{
-					if (indexed.Variables[v.variableName] != null && v.extraInfo is IndexedNode i)
+					if (indexed.Variables.Exists(v.variableName) && v.extraInfo is IndexedNode i)
 						indexed = i;
 					else if (indexed.Classes[v.variableName] != null)
 						indexed = indexed.Classes[v.variableName];
