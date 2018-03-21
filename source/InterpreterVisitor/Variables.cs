@@ -10,17 +10,7 @@ namespace AHKCore
 		public override complexVariableClass complexVariable(complexVariableClass context)
 		{
 			var oIndexed = indexed;
-			foreach(var chainLink  in context.chain)
-			{
-				if (chainLink is variableClass v)
-				{
-					if (indexed.Variables.Exists(v.variableName) && v.extraInfo is IndexedNode i)
-						indexed = i;
-					else if (indexed.Classes[v.variableName] != null)
-						indexed = indexed.Classes[v.variableName];
-					else {} //throw error
-				}
-			}
+			ScopeScript(context.chain);
 			
 			switch(context.variable)
 			{
