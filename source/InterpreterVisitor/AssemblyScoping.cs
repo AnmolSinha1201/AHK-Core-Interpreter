@@ -122,8 +122,17 @@ namespace AHKCore
 
 		BaseAHKNode invokeAssemblyMethod(Type scope, functionCallClass func)
 		{
-			return (BaseAHKNode)scope.GetMethods()
-				.Where(i => i.Name.ToLower() == func.functionName.ToLower() 
+			MethodInfo[] MethodArray = null;
+			if (scope == null)
+			{
+				if (!assemblyMap.Method.Exists(func.functionName))
+					return null;
+				MethodArray = assemblyMap.Method[func.functionName].ToArray();
+			}
+			if (scope != null)
+				MethodArray = scope.GetMethods();
+			
+			return	(BaseAHKNode)MethodArray.Where(i => i.Name.ToLower() == func.functionName.ToLower() 
 				&& i.GetParameters().Count() == func.functionParameterList.Count)
 				.First().Invoke(null, func.functionParameterList.Select(i => i.extraInfo).ToArray());
 		}

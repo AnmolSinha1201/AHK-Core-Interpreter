@@ -1,5 +1,6 @@
 using System.Reflection;
 using AHKCore.MappingFragment;
+using System;
 
 namespace AHKCore
 {
@@ -21,6 +22,12 @@ namespace AHKCore
 					continue;
 				Type[_type.Name] = _type;
 			}
+		}
+
+		public void mapMethods(Type t)
+		{
+			foreach (var mInfo in t.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly))
+				Method[mInfo.Name].Add(mInfo);
 		}
 	}
 }

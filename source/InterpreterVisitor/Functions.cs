@@ -10,6 +10,13 @@ namespace AHKCore
 	{
 		public override functionCallClass functionCall(functionCallClass context)
 		{
+			if (!indexed.Functions.Exists(context.functionName))
+			{
+				var retVal = invokeAssemblyMethod(null, context);
+				context.extraInfo = retVal;
+				return context;
+			}
+
 			var function = indexed.Functions[context.functionName][0];
 			var oIndexed = indexed;
 			indexed = new IndexedNode();

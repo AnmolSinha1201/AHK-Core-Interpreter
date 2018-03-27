@@ -18,9 +18,12 @@ namespace AHKCore
 
 		public override BaseAHKNode othersFilter(BaseAHKNode context)
 		{
-			if (context is directiveClass d && d.directiveName.ToLower() == "include")
+			if (context is directiveClass d)
 			{
-				LoadAssembly(d.directiveParam);
+				if (d.directiveName.ToLower() == "include")
+					LoadAssembly(d.directiveParam);
+				else if (d.directiveName.ToLower() == "using")
+					LoadMethods(d.directiveParam);
 			}
 			return context;
 		}
@@ -30,6 +33,12 @@ namespace AHKCore
 			var assembly =  AssemblyLoadContext.Default.LoadFromAssemblyPath(
 				Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), fileName));
 			assemblyMap.mapTypes(assembly);
+		}
+
+		void LoadMethods(string typeName)
+		{
+			var type = assemblyMap.Type[typeName];
+			assemblyMap.mapMethods(type);
 		}
 	}
 }
