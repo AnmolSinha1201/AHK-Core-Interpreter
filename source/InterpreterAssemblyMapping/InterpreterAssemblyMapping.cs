@@ -5,19 +5,21 @@ namespace AHKCore
 {
 	public partial class InterpreterAssemblyMapping
 	{
-		public NamespaceMap Namespace = new NamespaceMap();
 		public TypeMap Type = new TypeMap();
+
+		public MethodMap Method = new MethodMap();
 
 		/*
 			- Map outer classes only.
 		 */
-		public void mapNamespace(Assembly asm)
+
+		public void mapTypes(Assembly asm)
 		{
 			foreach (var _type in asm.GetTypes())
 			{
 				if (_type.IsNested)
 					continue;
-				Namespace[_type.Namespace].Add(_type);
+				Type[_type.Name] = _type;
 			}
 		}
 	}
