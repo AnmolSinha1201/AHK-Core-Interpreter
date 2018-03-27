@@ -74,21 +74,19 @@ namespace AHKCore
 		public override complexFunctionCallClass complexFunctionCall(complexFunctionCallClass context)
 		{
 			var oIndexed = indexed;
-			ScopeScript(context.chain);
-			
-			switch (context.function)
+			var retVal = scopeAndVariableOrFunction(context);
+
+			switch (retVal)
 			{
-				case functionCallClass f:
-					context.function = functionCall(f);
+				case complexFunctionCallClass o:
+					if (o.function.extraInfo is returnBlockClass r)
+						context.extraInfo = r.expression;
 				break;
 
-				case dotUnwrapClass d:
-					context.function = functionCall((functionCallClass)d.variableOrFunction);
+				default:
+					context.extraInfo = retVal;
 				break;
 			}
-
-			if (context.function.extraInfo is returnBlockClass r)
-				context.extraInfo = r.expression;
 
 			indexed = oIndexed;
 			return context;

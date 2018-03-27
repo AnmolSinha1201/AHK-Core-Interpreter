@@ -10,18 +10,7 @@ namespace AHKCore
 		public override complexVariableClass complexVariable(complexVariableClass context)
 		{
 			var oIndexed = indexed;
-			ScopeScript(context.chain);
-			
-			switch(context.variable)
-			{
-				case variableClass v:
-					context.variable = variable(v);
-				break;
-
-				case dotUnwrapClass d:
-					context.variable = variable((variableClass)d.variableOrFunction);
-				break;
-			}
+			context = (complexVariableClass)scopeAndVariableOrFunction(context);
 
 			indexed = oIndexed;
 			return context;
