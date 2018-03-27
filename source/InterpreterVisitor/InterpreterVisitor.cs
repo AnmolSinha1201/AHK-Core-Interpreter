@@ -5,5 +5,6 @@ namespace AHKCore
 		//indexed will manage states
 		public IndexedNode indexed;
 		public NodeTraverser traverser;
+		public InterpreterAssemblyMapping assemblyMap;
 	}
 }
