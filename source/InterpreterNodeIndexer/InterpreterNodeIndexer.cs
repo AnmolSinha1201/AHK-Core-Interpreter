@@ -29,7 +29,7 @@ namespace AHKCore
 		{
 			var assembly =  AssemblyLoadContext.Default.LoadFromAssemblyPath(
 				Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), fileName));
-			assemblyMap.mapNamespace(assembly);
+			assemblyMap.mapTypes(assembly);
 		}
 	}
 }
