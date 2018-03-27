@@ -8,9 +8,11 @@ namespace AHKCore
 		public void Interpret()
 		{
 			var parserInstance = new Parser();
-			var AHKNodes = parserInstance.parse("var=zxc()\nzxc(){return 1}\nzxc.qwe=123\nzxc.asd(123)\nclass zxc{asd(varA){varZ=99}}\nasd(123, 456)\nasd(varA, varB=123, varC=789){var1=123\nvar2=456\nvar1=var2}");
+			var AHKNodes = parserInstance.parse("#include, Stub.dll\nFunctions.Test()\nvar=zxc()\nzxc(){return 1}\nzxc.qwe=123\nzxc.asd(123)\nclass zxc{asd(varA){varZ=99}}\nasd(123, 456)\nasd(varA, varB=123, varC=789){var1=123\nvar2=456\nvar1=var2}");
 			
-			var indexer = new NodeIndexer();
+			var assemblyMap = new InterpreterAssemblyMapping();
+
+			var indexer = new InterpreterNodeIndexer(assemblyMap);
 			var indexedNodes = indexer.IndexNodes(AHKNodes);
 			
 			var visitor = new InterpreterVisitor();
@@ -18,6 +20,7 @@ namespace AHKCore
 
 			visitor.indexed = indexedNodes;
 			visitor.traverser = traverser;
+			visitor.assemblyMap = assemblyMap;
 
 			// manually calling objectDispatcher which will call its visitor functions
 			foreach (var o in indexedNodes.AutoExecute)
