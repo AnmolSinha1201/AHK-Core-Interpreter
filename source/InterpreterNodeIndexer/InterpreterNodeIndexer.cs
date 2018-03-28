@@ -23,7 +23,7 @@ namespace AHKCore
 				if (d.directiveName.ToLower() == "include")
 					LoadAssembly(d.directiveParam);
 				else if (d.directiveName.ToLower() == "using")
-					LoadMethods(d.directiveParam);
+					LoadNestedTypesAndMethods(d.directiveParam);
 			}
 			return context;
 		}
@@ -35,10 +35,11 @@ namespace AHKCore
 			assemblyMap.mapTypes(assembly);
 		}
 
-		void LoadMethods(string typeName)
+		void LoadNestedTypesAndMethods(string typeName)
 		{
 			var type = assemblyMap.Type[typeName];
 			assemblyMap.mapMethods(type);
+			assemblyMap.mapNestedTypes(type);
 		}
 	}
 }
