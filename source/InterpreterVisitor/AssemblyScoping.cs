@@ -75,11 +75,11 @@ namespace AHKCore
 					- Will be null if not found
 				 */
 				case variableClass o:
-					return scope.GetNestedType(o.variableName.ToLower());
+					return scope.GetNestedTypes()
+					.Where(i => i.Name.ToLower() == o.variableName.ToLower())?.First();
 
 				case functionCallClass o:
-					return (Type)scope.GetMethod(o.functionName.ToLower())
-					?.Invoke(null, o.functionParameterList.Select(i => i.extraInfo).ToArray());
+					return (Type)invokeAssemblyMethod(scope, o);
 
 				case dotUnwrapClass o:
 					return assemblyGetScopeNotNullStart(scope, o.variableOrFunction);
@@ -108,7 +108,7 @@ namespace AHKCore
 					return (BaseAHKNode)scope.GetField(o.variableName.ToLower()).GetValue(null);
 
 					case functionCallClass o:
-					return invokeAssemblyMethod(scope, o);
+					return (BaseAHKNode)invokeAssemblyMethod(scope, o);
 
 					case dotUnwrapClass o:
 					return assemblyReturn(scope, o.variableOrFunction);
@@ -120,7 +120,7 @@ namespace AHKCore
 			return null;
 		}
 
-		BaseAHKNode invokeAssemblyMethod(Type scope, functionCallClass func)
+		object invokeAssemblyMethod(Type scope, functionCallClass func)
 		{
 			MethodInfo[] MethodArray = null;
 			if (scope == null)
@@ -129,7 +129,7 @@ namespace AHKCore
 					return null;
 				MethodArray = assemblyMap.Method[func.functionName].ToArray();
 			}
-			if (scope != null)
+			else
 				MethodArray = scope.GetMethods();
 			
 			return	(BaseAHKNode)MethodArray.Where(i => i.Name.ToLower() == func.functionName.ToLower() 
