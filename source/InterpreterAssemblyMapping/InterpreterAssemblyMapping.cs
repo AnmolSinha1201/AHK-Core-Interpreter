@@ -29,5 +29,11 @@ namespace AHKCore
 			foreach (var mInfo in t.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly))
 				Method[mInfo.Name].Add(mInfo);
 		}
+
+		public void mapNestedTypes(Type t)
+		{
+			foreach (var _type in t.GetNestedTypes())
+				Type[_type.Name] = _type;
+		}
 	}
 }
