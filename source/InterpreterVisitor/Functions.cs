@@ -27,9 +27,9 @@ namespace AHKCore
 			foreach (var functionNode in function.functionBody)
 			{
 				var retVal = traverser.objectDispatcher(functionNode);
-				if (retVal.extraInfo is returnBlockClass r)
+				if (retVal is returnBlockClass r)
 				{
-					context.extraInfo = r;
+					context.extraInfo = r.extraInfo;
 					break;
 				}
 			}
@@ -81,19 +81,7 @@ namespace AHKCore
 		public override complexFunctionCallClass complexFunctionCall(complexFunctionCallClass context)
 		{
 			var oIndexed = indexed;
-			var retVal = scopeAndVariableOrFunction(context);
-
-			switch (retVal)
-			{
-				case complexFunctionCallClass o:
-					if (o.function.extraInfo is returnBlockClass r)
-						context.extraInfo = r.expression;
-				break;
-
-				default:
-					context.extraInfo = retVal;
-				break;
-			}
+			scopeAndVariableOrFunction(context);
 
 			indexed = oIndexed;
 			return context;
@@ -101,7 +89,7 @@ namespace AHKCore
 
 		public override returnBlockClass returnBlock(returnBlockClass context)
 		{
-			context.extraInfo = context;
+			context.extraInfo = context.expression.extraInfo;
 			return context;
 		}
 	}
