@@ -26,12 +26,12 @@ namespace AHKCore
 		{
 			if (context.expression is complexVariableClass c) //used for variable to variable assigns
 			{
-				Console.WriteLine(((variableClass)context.complexVariable.variable).variableName + "=" +((VariableValue)c.variable.extraInfo).Value);
+				// Console.WriteLine(((variableClass)context.complexVariable.variable).variableName + "=" +((VariableValue)c.variable.extraInfo).Value);
 				((VariableValue)context.complexVariable.variable.extraInfo).Value = ((VariableValue)c.variable.extraInfo).Value;
 			}
 			else
 			{
-				Console.WriteLine(((variableClass)context.complexVariable.variable).variableName + "=" + context.expression.extraInfo);
+				// Console.WriteLine(((variableClass)context.complexVariable.variable).variableName + "=" + context.expression.extraInfo);
 				((VariableValue)context.complexVariable.variable.extraInfo).Value = context.expression.extraInfo;
 			}
 			return context;
