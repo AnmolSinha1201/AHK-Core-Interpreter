@@ -26,7 +26,6 @@ namespace test
 				if (!retVal)
 				{
 					bAllPassed = false;
-					break;
 				}
 			}
 
