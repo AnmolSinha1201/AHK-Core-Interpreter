@@ -24,15 +24,15 @@ namespace AHKCore
 		
 		public override variableAssignClass variableAssign(variableAssignClass context)
 		{
-			if (context.expression is complexVariableClass c) //used for variable to variable assigns
+			switch (context.expression.extraInfo)
 			{
-				// Console.WriteLine(((variableClass)context.complexVariable.variable).variableName + "=" +((VariableValue)c.variable.extraInfo).Value);
-				((VariableValue)context.complexVariable.variable.extraInfo).Value = ((VariableValue)c.variable.extraInfo).Value;
-			}
-			else
-			{
-				// Console.WriteLine(((variableClass)context.complexVariable.variable).variableName + "=" + context.expression.extraInfo);
-				((VariableValue)context.complexVariable.variable.extraInfo).Value = context.expression.extraInfo;
+				case VariableValue o:
+					((VariableValue)context.complexVariable.extraInfo).Value = o.Value;
+				break;
+
+				default:
+					((VariableValue)context.complexVariable.extraInfo).Value = context.expression.extraInfo;
+				break;
 			}
 			return context;
 		}

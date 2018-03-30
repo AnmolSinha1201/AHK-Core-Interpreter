@@ -49,6 +49,7 @@ namespace AHKCore
 				break;
 			}
 
+			context.extraInfo = context.variable.extraInfo;
 			return context;
 		}
 
@@ -65,6 +66,7 @@ namespace AHKCore
 				break;
 			}
 
+			context.extraInfo = context.function.extraInfo;
 			return context;
 		}
 	}
