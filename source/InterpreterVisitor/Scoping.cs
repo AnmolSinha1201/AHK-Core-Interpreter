@@ -17,7 +17,15 @@ namespace AHKCore
 					if (indexed.Variables.Exists(v.variableName) && v.extraInfo is IndexedNode ind)
 						indexed = ind;
 					else if (indexed.Classes[v.variableName] != null)
+					{
 						indexed = indexed.Classes[v.variableName];
+						if (!autoExecuted.ContainsKey(indexed) || !autoExecuted[indexed])
+						{
+							foreach (var node in indexed.AutoExecute)
+								traverser.objectDispatcher(node);
+							autoExecuted[indexed] = true;
+						}
+					}
 					else
 						return assemblyScope(context, i);
 				}

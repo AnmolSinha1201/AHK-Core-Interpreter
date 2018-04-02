@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace AHKCore
 {
 	partial class InterpreterVisitor: AHKCore.BaseVisitor
@@ -6,5 +8,6 @@ namespace AHKCore
 		public IndexedNode indexed;
 		public NodeTraverser traverser;
 		public InterpreterAssemblyMapping assemblyMap;
+		public Dictionary<IndexedNode, bool> autoExecuted = new Dictionary<IndexedNode, bool>();
 	}
 }
