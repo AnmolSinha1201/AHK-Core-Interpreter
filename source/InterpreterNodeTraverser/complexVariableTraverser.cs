@@ -8,5 +8,15 @@ namespace AHKCore
 		{
 			return visitor.complexVariable(context);
 		}
+
+		public override variableAssignClass variableAssign(variableAssignClass context)
+		{
+			context.complexVariable = complexVariable(context.complexVariable);
+
+			if (context.expression.extraInfo == null)
+				context.expression = expression(context.expression);
+
+			return visitor.variableAssign(context);
+		}
 	}
 }
