@@ -5,24 +5,24 @@ namespace test
 	partial class TestCases
 	{
 		
-		static bool variableAssign()
+		static TestReturnClass variableAssign()
 		{
-			Console.Write("BASIC VARIABLE ASSIGN");
+			var retVal = new TestReturnClass("basic variable assign");
 			var indexed = interpreter.Interpret("var1=123");
 
 			if (indexed.Variables["var1"].Value.ToString() != "123")
-				return false;
-			return true;
+				return retVal.AsFalse();
+			return retVal.AsTrue();
 		}
 
-		static bool variableToVariableAssign()
+		static TestReturnClass variableToVariableAssign()
 		{
-			Console.Write("VARIABLE TO VARIABLE ASSIGN");
+			var retVal = new TestReturnClass("variable to variable assign");
 			var indexed = interpreter.Interpret("var1=123\nvar2=456\nvar1=var2");
 
 			if (indexed.Variables["var1"].Value.ToString() != "456")
-				return false;
-			return true;
+				return retVal.AsFalse();
+			return retVal.AsTrue();
 		}
 	}
 }

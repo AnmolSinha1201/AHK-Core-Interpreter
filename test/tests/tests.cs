@@ -2,6 +2,7 @@ using AHKCore;
 using System.Reflection;
 using System.Linq;
 using System;
+using System.Collections.Generic;
 
 namespace test
 {
@@ -17,20 +18,24 @@ namespace test
 			var _tests = typeof(TestCases)
 			.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.NonPublic | BindingFlags.Static);
 
-			bool bAllPassed = true;
+			var failedList = new List<TestReturnClass>();
 			foreach (var _test in _tests)
 			{
-				var retVal = (bool)_test.Invoke(null, null);
-				Console.WriteLine(retVal? " : PASSED" : " : FAILED");
-				
-				if (!retVal)
-				{
-					bAllPassed = false;
-				}
+				var retVal = (TestReturnClass)_test.Invoke(null, null);
+				if (!retVal.bPassed)
+					failedList.Add(retVal);
 			}
 
-			if (bAllPassed)
-				Console.WriteLine("ALL TESTS PASSED");
+			if (failedList.Count > 0)
+			{
+				Console.WriteLine(failedList.Count + " TEST" + ((failedList.Count == 1)?"" : "S") + " FAILED :");
+				failedList.ForEach(o => Console.WriteLine(o.testDescription));
+			}
+			else
+			{
+				Console.WriteLine($"({_tests.Count()}/{_tests.Count()}) TESTS PASSED");
+			}
+
 		}
 	}
 }
