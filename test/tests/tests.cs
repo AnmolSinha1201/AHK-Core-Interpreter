@@ -16,7 +16,7 @@ namespace test
 		public static void TestAll()
 		{
 			var _tests = typeof(TestCases)
-			.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.NonPublic | BindingFlags.Static);
+			.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Static);
 
 			var failedList = new List<TestReturnClass>();
 			foreach (var _test in _tests)
