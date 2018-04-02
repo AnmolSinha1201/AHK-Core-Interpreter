@@ -81,6 +81,10 @@ namespace AHKCore
 		public override complexFunctionCallClass complexFunctionCall(complexFunctionCallClass context)
 		{
 			var oIndexed = indexed;
+
+			for (int i = 0; i < context.functionParameterList.Count; i++)
+				context.functionParameterList[i] = traverser.objectDispatcher(context.functionParameterList[i]);
+			
 			scopeAndVariableOrFunction(context);
 
 			indexed = oIndexed;
