@@ -85,7 +85,8 @@ namespace AHKCore
 			for (int i = 0; i < context.functionParameterList.Count; i++)
 				context.functionParameterList[i] = traverser.objectDispatcher(context.functionParameterList[i]);
 			
-			scopeAndVariableOrFunction(context);
+			var retVal = scopeAndVariableOrFunction(context);
+			context.extraInfo = retVal.extraInfo;
 
 			indexed = oIndexed;
 			return context;
