@@ -134,7 +134,7 @@ namespace AHKCore
 			
 			return	(BaseAHKNode)MethodArray.Where(i => i.Name.ToLower() == func.functionName.ToLower() 
 				&& i.GetParameters().Count() == func.functionParameterList.Count)
-				.First().Invoke(null, func.functionParameterList.Select(i => i.extraInfo).ToArray());
+				.First().Invoke(null, func.functionParameterList.ToArray());
 		}
 	}
 }
