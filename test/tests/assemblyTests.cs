@@ -33,5 +33,15 @@ namespace test
 				return retVal.AsFalse();
 			return retVal.AsTrue();
 		}
+
+		public static TestReturnClass assemblyInstanceFunctionCall()
+		{
+			var retVal = new TestReturnClass("assembly instance function call");
+			var indexed = interpreter.Interpret("#include, Stub.dll\n#using Functions\nvar=Test3(123)\nvar2=var.GetText()");
+
+			if (indexed.Variables["var2"].Value.ToString() != "123")
+				return retVal.AsFalse();
+			return retVal.AsTrue();
+		}
 	}
 }
