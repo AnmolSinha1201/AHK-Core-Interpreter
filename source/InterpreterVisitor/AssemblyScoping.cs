@@ -2,7 +2,6 @@ using System.Reflection;
 using static AHKCore.Nodes;
 using System;
 using System.Linq;
-using static AHKCore.IndexedNodesFragment.Variables;
 
 namespace AHKCore
 {
@@ -10,27 +9,26 @@ namespace AHKCore
 	{
 		BaseAHKNode assemblyScope(dynamic context, int startFrom)
 		{
-			object scope = null;
+			Type scope = null;
 
-			variableClass v = context.chain[startFrom];
-			if (indexed.Variables.Exists(v.variableName))
+			if (context.chain[startFrom] is variableClass v)
 			{
-				variable(v);
-				scope = ((VariableValue)v.extraInfo).Value;
+				if (indexed.Variables.Exists(v.variableName) && v.extraInfo is Type t)
+					scope = t;
+				// else chainLink is part of assembly name
+				else
+				{
+					scope = assemblyGetScopeNullStart(context.chain[startFrom]);
+				}
+				
+				startFrom++;
+				if (scope == null)
+					return null;
 			}
-			// else chainLink is part of assembly name
-			else
-			{
-				scope = assemblyGetScopeNullStart(context.chain[startFrom]);
-			}
-			
-			startFrom++;
-			if (scope == null)
-				return null;
 
 			for (int i = startFrom; i < context.chain.Count; i++)
 			{
-				scope = assemblyGetScopeNotNullStart((Type)scope, context.chain[startFrom]);
+				scope = assemblyGetScopeNotNullStart(scope, context.chain[startFrom]);
 				if (scope == null)
 					return null;
 			}
@@ -89,7 +87,7 @@ namespace AHKCore
 			return null;
 		}
 
-		BaseAHKNode assemblyReturn(object scope, BaseAHKNode varOrFunc)
+		BaseAHKNode assemblyReturn(Type scope, BaseAHKNode varOrFunc)
 		{
 			if (scope == null)
 			{
@@ -102,29 +100,12 @@ namespace AHKCore
 					return (BaseAHKNode)assemblyMap.Method[funcCall.functionName][0]
 					.Invoke(null, funcCall.functionParameterList.Select(i => i.extraInfo).ToArray());
 			}
-			else if (scope is Type t)
+			else
 			{
 				switch (varOrFunc)
 				{
 					case variableClass o:
-					return (BaseAHKNode)t.GetField(o.variableName.ToLower()).GetValue(null);
-
-					case functionCallClass o:
-					return (BaseAHKNode)invokeAssemblyMethod(t, o);
-
-					case dotUnwrapClass o:
-					return assemblyReturn(scope, o.variableOrFunction);
-
-					case complexFunctionCallClass o:
-					return assemblyReturn(scope, o.function);	
-				}
-			}
-			else //plain object
-			{
-				switch (varOrFunc)
-				{
-					case variableClass o:
-					return (BaseAHKNode)((Type)scope).GetField(o.variableName.ToLower()).GetValue(null);
+					return (BaseAHKNode)scope.GetField(o.variableName.ToLower()).GetValue(null);
 
 					case functionCallClass o:
 					return (BaseAHKNode)invokeAssemblyMethod(scope, o);
@@ -139,7 +120,7 @@ namespace AHKCore
 			return null;
 		}
 
-		object invokeAssemblyMethod(object scope, functionCallClass func)
+		object invokeAssemblyMethod(Type scope, functionCallClass func)
 		{
 			MethodInfo[] MethodArray = null;
 			if (scope == null)
@@ -148,14 +129,12 @@ namespace AHKCore
 					return null;
 				MethodArray = assemblyMap.Method[func.functionName].ToArray();
 			}
-			else if (scope is Type t)
-				MethodArray = t.GetMethods();
 			else
-				MethodArray = scope.GetType().GetMethods();
+				MethodArray = scope.GetMethods();
 			
 			return	(BaseAHKNode)MethodArray.Where(i => i.Name.ToLower() == func.functionName.ToLower() 
 				&& i.GetParameters().Count() == func.functionParameterList.Count)
-				.First().Invoke(scope is Type? null : scope, func.functionParameterList.ToArray());
+				.First().Invoke(null, func.functionParameterList.ToArray());
 		}
 	}
 }
