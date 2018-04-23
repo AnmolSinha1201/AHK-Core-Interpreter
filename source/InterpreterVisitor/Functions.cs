@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static AHKCore.IndexedNodesFragment.Variables;
 using static AHKCore.Nodes;
 using static AHKCore.Query;
 
@@ -86,7 +87,7 @@ namespace AHKCore
 				context.functionParameterList[i] = traverser.objectDispatcher(context.functionParameterList[i]);
 			
 			var retVal = scopeAndVariableOrFunction(context);
-			context.extraInfo = retVal.extraInfo;
+			context.extraInfo = retVal is VariableValue v? v.Value : retVal.extraInfo;
 
 			indexed = oIndexed;
 			return context;
