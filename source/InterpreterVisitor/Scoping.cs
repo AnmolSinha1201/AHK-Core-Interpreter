@@ -8,6 +8,12 @@ namespace AHKCore
 {
 	partial class InterpreterVisitor
 	{
+		/*
+			- Returning null if chain length = 0 because there should be no scope if there 
+				is no chain.
+			- Check if the chainLink is a AHK node or assembly type/instance.
+			- TODO : Add functions as a valid chainLink (already supporeted by parser)
+		 */
 		object scopeChain(List<BaseAHKNode> chain)
 		{
 			if (chain.Count == 0)
