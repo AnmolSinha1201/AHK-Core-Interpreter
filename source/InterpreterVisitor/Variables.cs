@@ -7,18 +7,51 @@ namespace AHKCore
 {
 	partial class InterpreterVisitor
 	{
-		public override complexVariableClass complexVariable(complexVariableClass context)
+		public override variableClass variable(variableClass context)
 		{
-			var oIndexed = indexed;
-			context = (complexVariableClass)scopeAndVariableOrFunction(context);
+			switch (context.extraInfo)
+			{
+				case IndexedNode o:
+					return variableGetAHK(context);
 
-			indexed = oIndexed;
+				case null:
+					context.extraInfo = indexed;
+					return variableGetAHK(context);
+			}
+
+			return null;
+		}
+
+		public variableClass variableGetAHK(variableClass context)
+		{
+			var scope = (IndexedNode)context.extraInfo;
+
+			context.extraInfo = scope.Variables[context.variableName];
 			return context;
 		}
 
-		public override variableClass variable(variableClass context)
+		public override complexVariableClass complexVariable(complexVariableClass context)
 		{
-			context.extraInfo = indexed.Variables[context.variableName];
+			var scope = scopeChain(context.chain);
+			
+			BaseAHKNode retVal = null;
+			switch(context.variable)
+			{
+				case variableClass o:
+					o.extraInfo = scope;
+					retVal = variable(o);
+				break;
+
+				case dotUnwrapClass o:
+					o.variableOrFunction.extraInfo = scope;
+					retVal = variable((variableClass)o.variableOrFunction);
+				break;
+			}
+
+			if (retVal == null)
+				return null;
+
+			context.extraInfo = retVal.extraInfo;
 			return context;
 		}
 		

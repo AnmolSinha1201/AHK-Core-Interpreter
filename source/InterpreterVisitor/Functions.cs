@@ -11,16 +11,35 @@ namespace AHKCore
 	{
 		public override functionCallClass functionCall(functionCallClass context)
 		{
-			if (!indexed.Functions.Exists(context.functionName))
+			switch (context.extraInfo)
 			{
-				var retVal = invokeAssemblyMethod(null, context);
-				context.extraInfo = retVal;
-				return context;
-			}
+				case null:
+					if (indexed.Functions.Exists(context.functionName))
+					{
+						context.extraInfo = indexed;
+						return functionCallAHK(context);
+					}
+					else if (assemblyMap.Method.Exists(context.functionName))
+					{
+						context.extraInfo = invokeAssemblyMethod(null, context);
+						return context;
+					}
+					return null;
 
-			var function = indexed.Functions[context.functionName][0];
-			var oIndexed = indexed;
-			indexed = new IndexedNode();
+				case IndexedNode o:
+					return functionCallAHK(context);
+				
+				default:
+					context.extraInfo = invokeAssemblyMethod(context.extraInfo, context);
+					return context;
+			}
+		}
+
+		public functionCallClass functionCallAHK(functionCallClass context)
+		{
+			IndexedNode scope = (IndexedNode)context.extraInfo;
+			var function = scope.Functions[context.functionName][0];
+			scope = new IndexedNode();
 
 			var parameterVariableAssignList = addParams(context, function);
 			function.functionBody = parameterVariableAssignList.Concat(function.functionBody).ToList();
@@ -35,7 +54,6 @@ namespace AHKCore
 				}
 			}
 			
-			indexed = oIndexed;
 			return context;
 		}
 
@@ -81,15 +99,30 @@ namespace AHKCore
 
 		public override complexFunctionCallClass complexFunctionCall(complexFunctionCallClass context)
 		{
-			var oIndexed = indexed;
-
 			for (int i = 0; i < context.functionParameterList.Count; i++)
 				context.functionParameterList[i] = traverser.objectDispatcher(context.functionParameterList[i]);
 			
-			var retVal = scopeAndVariableOrFunction(context);
-			context.extraInfo = retVal is VariableValue v? v.Value : retVal.extraInfo;
+			var scope = scopeChain(context.chain);
 
-			indexed = oIndexed;
+			BaseAHKNode retVal = null;
+			switch (context.function)
+			{
+				case functionCallClass o:
+					o.extraInfo = scope;
+					retVal = functionCall(o);
+				break;
+
+				case dotUnwrapClass o:
+					o.variableOrFunction.extraInfo = scope;
+					retVal = functionCall((functionCallClass)o.variableOrFunction);
+				break;
+			}
+
+			if (retVal == null)
+				return null;
+
+			// var retVal = scopeAndVariableOrFunction(context);
+			context.extraInfo = retVal is VariableValue v? v.Value : retVal.extraInfo;
 			return context;
 		}
 

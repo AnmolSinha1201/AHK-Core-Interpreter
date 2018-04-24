@@ -8,74 +8,59 @@ namespace AHKCore
 {
 	partial class InterpreterVisitor
 	{
-		BaseAHKNode scopeAndVariableOrFunction(dynamic context)
+		object scopeChain(List<BaseAHKNode> chain)
 		{
-			for (int i = 0; i < context.chain.Count; i++)
+			if (chain.Count == 0)
+				return null;
+			
+			object scope = indexed;
+			foreach (var chainLink in chain)
 			{
-				if (context.chain[i] is variableClass v)
+				if (chainLink is variableClass v)
 				{
-					if (indexed.Variables.Exists(v.variableName) && v.extraInfo is IndexedNode ind)
-						indexed = ind;
-					else if (indexed.Classes[v.variableName] != null)
-					{
-						indexed = indexed.Classes[v.variableName];
-						if (!autoExecuted.ContainsKey(indexed) || !autoExecuted[indexed])
-						{
-							foreach (var node in indexed.AutoExecute)
-								traverser.objectDispatcher(node);
-							autoExecuted[indexed] = true;
-						}
-					}
-					else
-						return assemblyScope(context, i);
+					object retVal = null;
+
+					if (scope is IndexedNode ind)
+						retVal = scopeAHKVariable(ind, v);
+					if (retVal == null)
+						retVal = scopeAssemblyVariable(scope, v);
+
+					if (retVal == null)
+						return null;
+					scope = retVal;
 				}
 			}
 
-			switch (context)
-			{
-				case complexFunctionCallClass o:
-					return scopeEndFunction(o);
-				
-				case complexVariableClass o:
-					return scopeEndVariable(o);
-
-				default:
-					return null;
-			}
+			return scope;
 		}
 
-		BaseAHKNode scopeEndVariable(complexVariableClass context)
-		{
-			switch(context.variable)
+		IndexedNode scopeAHKVariable(IndexedNode scope, variableClass v)
+		{			
+			if (scope.Variables.Exists(v.variableName))
 			{
-				case variableClass v:
-					context.variable = variable(v);
-				break;
-
-				case dotUnwrapClass d:
-					context.variable = variable((variableClass)d.variableOrFunction);
-				break;
+				variable(v);
+				if (v.extraInfo is IndexedNode ind)
+					return ind;
+				return null;
+				// if v.extraInfo is instance of a type, it will be resolved in scopeAssemblyVariable
 			}
-
-			context.extraInfo = context.variable.extraInfo;
-			return context;
-		}
-
-		BaseAHKNode scopeEndFunction(complexFunctionCallClass context)
-		{
-			switch (context.function)
+			else if (scope.Classes.Exists(v.variableName))
 			{
-				case functionCallClass f:
-					context.function = functionCall(f);
-				break;
+				var newScope = scope.Classes[v.variableName];
+				if (!autoExecuted.ContainsKey(newScope) || !autoExecuted[newScope])
+				{
+					var oIndex = indexed;
+					indexed = newScope;
 
-				case dotUnwrapClass d:
-					context.function = functionCall((functionCallClass)d.variableOrFunction);
-				break;
+					foreach (var node in newScope.AutoExecute)
+						traverser.objectDispatcher(node);
+					autoExecuted[newScope] = true;
+					
+					indexed = oIndex;
+				}
+				return newScope;
 			}
-
-			context.extraInfo = context.function.extraInfo;
-			return context;
+			return null;
 		}
 	}
 }
