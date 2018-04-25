@@ -1,31 +1,35 @@
+using AHKCore;
+
 namespace test
 {
-	public class TestReturnClass
+	partial class TestRunner
 	{
-		public string testDescription;
-		public bool bPassed;
+		static Interpreter interpreter = new Interpreter();
 
-		public TestReturnClass(string testDescription, bool bPassed)
+		public static TestRunnerResult Test(string testString)
 		{
-			this.testDescription = testDescription;
-			this.bPassed = bPassed;
-		}
+			var retVal = new TestRunnerResult();
 
-		public TestReturnClass(string testDescription)
-		{
-			this.testDescription = testDescription;
-		}
+			try
+			{
+				var indexed = interpreter.Interpret(testString);
+				retVal.indexed = indexed;
+			}
+			catch
+			{ retVal.result = TestResult.Exception;	}
 
-		public TestReturnClass AsTrue()
-		{
-			this.bPassed = true;
-			return this;
+			return retVal;
 		}
+	}
 
-		public TestReturnClass AsFalse()
-		{
-			this.bPassed = false;
-			return this;
-		}
+	public class TestRunnerResult
+	{
+		public TestResult result;
+		public IndexedNode indexed;
+	}
+
+	public enum TestResult
+	{
+		Passed, Failed, Exception
 	}
 }
