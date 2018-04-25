@@ -52,5 +52,10 @@ namespace test
 				exceptionList.ForEach(o => Console.WriteLine(o.Name));
 			}
 		}
+
+		public static void TestFunction(Func<TestResult> function)
+		{
+			Console.WriteLine(function().ToString());
+		}
 	}
 }
