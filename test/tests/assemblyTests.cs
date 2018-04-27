@@ -47,5 +47,16 @@ namespace test
 				return TestResult.Failed;
 			return TestResult.Passed;
 		}
+
+		public static TestResult assemblyIncludeNoUsing()
+		{
+			var retVal = TestRunner.Test("#include, Stub.dll\n\nvar=Test3(123)\nvar2=var.GetText()");
+			if (retVal.result == TestResult.Exception)
+				return TestResult.Exception;
+			
+			if (retVal.indexed.Variables["var2"].Value.ToString() != "123")
+				return TestResult.Failed;
+			return TestResult.Passed;
+		}
 	}
 }
