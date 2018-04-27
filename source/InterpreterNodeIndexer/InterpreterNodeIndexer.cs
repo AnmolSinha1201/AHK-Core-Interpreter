@@ -33,6 +33,7 @@ namespace AHKCore
 			var assembly =  AssemblyLoadContext.Default.LoadFromAssemblyPath(
 				Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), fileName));
 			assemblyMap.mapTypes(assembly);
+			assemblyMap.mapMethods(assembly.GetTypes().Where(i => i.Name.ToLower() == "functions").First());
 		}
 
 		void LoadNestedTypesAndMethods(string typeName)
