@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using System.Reflection;
+using static AHKCore.IndexedNodesFragment.Variables;
 
 namespace AHKCore
 {
@@ -45,7 +46,7 @@ namespace AHKCore
 			if (scope.Variables.Exists(v.variableName))
 			{
 				variable(v);
-				if (v.extraInfo is IndexedNode ind)
+				if (((VariableValue)v.extraInfo).Value is IndexedNode ind)
 					return ind;
 				return null;
 				// if v.extraInfo is instance of a type, it will be resolved in scopeAssemblyVariable
@@ -55,14 +56,8 @@ namespace AHKCore
 				var newScope = scope.Classes[v.variableName];
 				if (!autoExecuted.ContainsKey(newScope) || !autoExecuted[newScope])
 				{
-					var oIndex = indexed;
-					indexed = newScope;
-
-					foreach (var node in newScope.AutoExecute)
-						traverser.objectDispatcher(node);
+					autoExec(newScope);
 					autoExecuted[newScope] = true;
-					
-					indexed = oIndex;
 				}
 				return newScope;
 			}
