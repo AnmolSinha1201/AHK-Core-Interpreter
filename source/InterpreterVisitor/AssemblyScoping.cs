@@ -43,9 +43,11 @@ namespace AHKCore
 			else
 				MethodArray = scope.GetType().GetMethods();
 			
-			return	(BaseAHKNode)MethodArray.Where(i => i.Name.ToLower() == func.functionName.ToLower() 
+			var method = MethodArray.Where(i => i.Name.ToLower() == func.functionName.ToLower() 
 				&& i.GetParameters().Count() == func.functionParameterList.Count)
-				.First().Invoke(scope is Type? null : scope, func.functionParameterList.ToArray());
+				.First();
+			return method.Invoke(scope is Type? null : scope, 
+				func.functionParameterList.Select(i => i.extraInfo).ToArray());
 		}
 	}
 }
