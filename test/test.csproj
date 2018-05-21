@@ -8,6 +8,7 @@
 	<!-- Add AHKCore.dll before project -->
 	<ItemGroup>
 		<Reference Include="dependencies\AHKCore.dll" />
+		<Reference Include="dependencies\Stub.dll" />
 		<ProjectReference Include="..\source\source.csproj" />
 	</ItemGroup>
 </Project>
