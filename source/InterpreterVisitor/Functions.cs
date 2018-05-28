@@ -121,8 +121,8 @@ namespace AHKCore
 			if (retVal == null)
 				return null;
 
-			// var retVal = scopeAndVariableOrFunction(context);
-			context.extraInfo = retVal is VariableValue v? v.Value : retVal.extraInfo;
+			// context.extraInfo = retVal is VariableValue v? v.Value : retVal.extraInfo;
+			context.extraInfo = retVal.extraInfo;
 			return context;
 		}
 
