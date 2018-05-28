@@ -58,5 +58,38 @@ namespace test
 				return TestResult.Failed;
 			return TestResult.Passed;
 		}
+		
+		public static TestResult assemblyPassingVariable()
+		{
+			var retVal = TestRunner.Test("#include, Stub.dll\nvar1=123\nvar=Test2(var1)");
+			if (retVal.result == TestResult.Exception)
+				return TestResult.Exception;
+			
+			if (retVal.indexed.Variables["var"].Value.ToString() != "123")
+				return TestResult.Failed;
+			return TestResult.Passed;
+		}
+
+		public static TestResult assemblyRefMethodPassingVariable()
+		{
+			var retVal = TestRunner.Test("#include, Stub.dll\nvar=456\nTest4(var)");
+			if (retVal.result == TestResult.Exception)
+				return TestResult.Exception;
+			
+			if (retVal.indexed.Variables["var"].Value.ToString() != "123")
+				return TestResult.Failed;
+			return TestResult.Passed;
+		}
+
+		public static TestResult assemblyRefMethodPassingUnassignedVariable()
+		{
+			var retVal = TestRunner.Test("#include, Stub.dll\nTest4(var)");
+			if (retVal.result == TestResult.Exception)
+				return TestResult.Exception;
+			
+			if (retVal.indexed.Variables["var"].Value.ToString() != "123")
+				return TestResult.Failed;
+			return TestResult.Passed;
+		}
 	}
 }
