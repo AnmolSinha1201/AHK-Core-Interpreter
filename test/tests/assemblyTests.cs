@@ -91,5 +91,16 @@ namespace test
 				return TestResult.Failed;
 			return TestResult.Passed;
 		}
+
+		public static TestResult assemblyRefMethodPassingValue()
+		{
+			var retVal = TestRunner.Test("#include, Stub.dll\nvar=Test4(456)");
+			if (retVal.result == TestResult.Exception)
+				return TestResult.Exception;
+			
+			if (retVal.indexed.Variables["var"].Value.ToString() != "123")
+				return TestResult.Failed;
+			return TestResult.Passed;
+		}
 	}
 }
