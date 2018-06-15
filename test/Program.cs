@@ -8,7 +8,7 @@ namespace test
 	{
 		static void Main(string[] args)
 		{
-			Test.TestFunction(TestCases.basicNewObjectVariableChange);
+			Test.TestFunction(TestCases.binaryOpTest1);
 			Test.TestAll();
 		}
 	}
