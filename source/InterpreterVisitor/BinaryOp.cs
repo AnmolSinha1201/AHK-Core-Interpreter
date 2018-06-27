@@ -17,7 +17,7 @@ namespace AHKCore
 			return context;
 		}
 
-		static List<string> opPriority = new List<string>() {"-", "+", "*", "/"};
+		static List<string> opPriority = new List<string>() {"=", "-", "+", "*", "/"};
 		List<BaseAHKNode> ToPostfix(List<BaseAHKNode> nodes)
 		{
 			var stack = new Stack<opClass>();
@@ -63,7 +63,7 @@ namespace AHKCore
 						var item2 = stack.Pop();
 						var item1 = stack.Pop();
 						var retItem = new dummyClass() 
-						{extraInfo = binaryOpEvaluator(item1.extraInfo, item2.extraInfo, o)};
+						{extraInfo = binaryOpEvaluator(item1, item2, o)};
 						
 						stack.Push(retItem);
 					break;
@@ -78,39 +78,30 @@ namespace AHKCore
 			return stack.Pop().extraInfo;
 		}
 
-		object binaryOpEvaluator(object item1, object item2, opClass op)
+		object binaryOpEvaluator(BaseAHKNode item1, BaseAHKNode item2, opClass op)
 		{
-			item1 = ToInt64OrDouble(item1);
-			item2 = ToInt64OrDouble(item2);
 
 			switch (op.op)
 			{
 				case "+":
-					return (dynamic)item1 + (dynamic)item2;
+					return (dynamic)item1.extraInfo + (dynamic)item2.extraInfo;
 
 				case "-":
-					return (dynamic)item1 - (dynamic)item2;
+					return (dynamic)item1.extraInfo - (dynamic)item2.extraInfo;
 
 				case "*":
-					return (dynamic)item1 * (dynamic)item2;
+					return (dynamic)item1.extraInfo * (dynamic)item2.extraInfo;
 
 				case "/":
-					return (dynamic)item1 / (dynamic)item2;
+					return (dynamic)item1.extraInfo / (dynamic)item2.extraInfo;
+
+				case "=":
+					var item1EI = item1.extraInfo is VariableValue v1? v1.Value : item1.extraInfo;
+					var item2EI = item2.extraInfo is VariableValue v2? v2.Value : item2.extraInfo;
+
+					return item1EI.ToString().ToLower() == item2EI.ToString().ToLower();
 			}
 
-			return null;
-		}
-
-		object ToInt64OrDouble(object item)
-		{
-			long l;
-			if (Int64.TryParse(item.ToString(), out l))
-				return l;
-			
-			double d;
-			if (double.TryParse(item.ToString(), out d))
-				return d;
-			
 			return null;
 		}
 	}
