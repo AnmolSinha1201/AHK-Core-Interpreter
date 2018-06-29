@@ -17,7 +17,7 @@ namespace AHKCore
 			return context;
 		}
 
-		static List<string> opPriority = new List<string>() {"&&", "||", "<", ">", "=", "<=", ">=", "==", "!=", ".", "-", "+", "*", "/", "//", "**"};
+		static List<string> opPriority = new List<string>() {"&&", "||", "<", ">", "=", "<=", ">=", "==", "!=", ".", ">>", "<<", "-", "+", "*", "/", "//", "**"};
 		List<BaseAHKNode> ToPostfix(List<BaseAHKNode> nodes)
 		{
 			var stack = new Stack<opClass>();
@@ -104,6 +104,12 @@ namespace AHKCore
 
 				case "**":
 					return MathF.Pow((dynamic)item1EI, (dynamic)item2EI);
+
+				case "<<":
+					return (dynamic)item1EI << Convert.ToInt32(item2EI);
+
+				case ">>":
+					return (dynamic)item1EI >> Convert.ToInt32(item2EI);
 				
 				case ".":
 					return item1EI.ToString() + item2EI.ToString();
