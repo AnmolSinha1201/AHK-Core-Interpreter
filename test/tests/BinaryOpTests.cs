@@ -311,5 +311,27 @@ namespace test
 				return TestResult.Failed;
 			return TestResult.Passed;
 		}
+
+		public static TestResult binaryOpBitwiseTest1()
+		{
+			var retVal = TestRunner.Test("var=1<<1+1");
+			if (retVal.result == TestResult.Exception)
+				return TestResult.Exception;
+			
+			if (retVal.indexed.Variables["var"].Value.ToString() != "4")
+				return TestResult.Failed;
+			return TestResult.Passed;
+		}
+
+		public static TestResult binaryOpBitwiseTest2()
+		{
+			var retVal = TestRunner.Test("var=1<<1+(1&&\"text\")");
+			if (retVal.result == TestResult.Exception)
+				return TestResult.Exception;
+			
+			if (retVal.indexed.Variables["var"].Value.ToString() != "4")
+				return TestResult.Failed;
+			return TestResult.Passed;
+		}
 	}
 }
