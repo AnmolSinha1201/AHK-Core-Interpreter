@@ -16,7 +16,7 @@ namespace test
 				var indexed = interpreter.Interpret(testString);
 				retVal.indexed = indexed;
 			}
-			catch
+			catch (Exception e)
 			{ retVal.result = TestResult.Exception;	}
 
 			return retVal;
