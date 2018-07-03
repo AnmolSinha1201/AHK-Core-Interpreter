@@ -110,6 +110,12 @@ namespace AHKCore
 
 				case ">>":
 					return (dynamic)item1EI >> Convert.ToInt32(item2EI);
+
+				case "&":
+					return (dynamic)item1EI & (dynamic)item2EI;
+
+				case "|":
+					return (dynamic)item1EI | (dynamic)item2EI;
 				
 				case ".":
 					return item1EI.ToString() + item2EI.ToString();
