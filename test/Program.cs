@@ -8,7 +8,7 @@ namespace test
 	{
 		static void Main(string[] args)
 		{
-			Test.TestFunction(TestCases.binaryOpBitwiseTest1);
+			Test.TestFunction(TestCases.unaryOpTest7);
 			Test.TestAll();
 		}
 	}
