@@ -49,7 +49,6 @@ namespace AHKCore
 			return retList;
 		}
 
-		class dummyClass : BaseAHKNode { }
 		object PostfixEvaluator(List<BaseAHKNode> postfixList)
 		{
 			var stack = new Stack<BaseAHKNode>();
@@ -62,7 +61,7 @@ namespace AHKCore
 						if (stack.Count < 2) {} //error
 						var item2 = stack.Pop();
 						var item1 = stack.Pop();
-						var retItem = new dummyClass() 
+						var retItem = new BaseAHKNode() 
 						{extraInfo = binaryOpEvaluator(item1, item2, o)};
 						
 						stack.Push(retItem);
