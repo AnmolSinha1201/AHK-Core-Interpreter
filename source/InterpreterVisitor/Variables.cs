@@ -2,6 +2,7 @@ using System;
 using static AHKCore.Nodes;
 using static AHKCore.Query;
 using static AHKCore.IndexedNodesFragment.Variables;
+using System.Collections.Generic;
 
 namespace AHKCore
 {
@@ -57,16 +58,23 @@ namespace AHKCore
 		
 		public override variableAssignClass variableAssign(variableAssignClass context)
 		{
-			switch (context.expression.extraInfo)
+			var contextEI = context.expression.extraInfo is VariableValue v?
+				v.Value : context.expression.extraInfo;
+
+			switch (context.op)
 			{
-				case VariableValue o:
-					((VariableValue)context.complexVariable.extraInfo).Value = o.Value;
+				case "=":
+				case ":=":
+					((VariableValue)context.complexVariable.extraInfo).Value = contextEI;
 				break;
 
 				default:
-					((VariableValue)context.complexVariable.extraInfo).Value = context.expression.extraInfo;
+					var exp = new binaryOperationClass(new List<BaseAHKNode>() 
+						{context.complexVariable, new opClass(context.op.Substring(0, context.op.Length - 1)), context.expression});
+					((VariableValue)context.complexVariable.extraInfo).Value = traverser.binaryOperation(exp).extraInfo;
 				break;
 			}
+			
 			return context;
 		}
 	}
