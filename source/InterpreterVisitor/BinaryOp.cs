@@ -96,7 +96,7 @@ namespace AHKCore
 					return (dynamic)item1EI * (dynamic)item2EI;
 
 				case "/":
-					return (dynamic)item1EI / (dynamic)item2EI;
+					return Convert.ToDouble(item1EI) / Convert.ToDouble(item2EI);
 
 				case "//":
 					return (Int64)((dynamic)item1EI / (dynamic)item2EI);
