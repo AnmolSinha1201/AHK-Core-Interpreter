@@ -366,5 +366,16 @@ namespace test
 				return TestResult.Failed;
 			return TestResult.Passed;
 		}
+
+		public static TestResult binaryOpBitwiseTest6()
+		{
+			var retVal = TestRunner.Test("var:=5^1");
+			if (retVal.result == TestResult.Exception)
+				return TestResult.Exception;
+			
+			if (retVal.indexed.Variables["var"].Value.ToString() != "4")
+				return TestResult.Failed;
+			return TestResult.Passed;
+		}
 	}
 }
