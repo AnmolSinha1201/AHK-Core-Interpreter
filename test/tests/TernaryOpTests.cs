@@ -6,7 +6,7 @@ namespace test
 	{
 		public static TestResult ternaryOpTest1()
 		{
-			var retVal = TestRunner.Test("var=1?123:456");
+			var retVal = TestRunner.Test("var:=1?123:456");
 			if (retVal.result == TestResult.Exception)
 				return TestResult.Exception;
 			

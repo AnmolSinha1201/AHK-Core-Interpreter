@@ -6,7 +6,7 @@ namespace test
 	{
 		public static TestResult variableAssign()
 		{
-			var retVal = TestRunner.Test("var1=123");
+			var retVal = TestRunner.Test("var1:=123");
 			if (retVal.result == TestResult.Exception)
 				return TestResult.Exception;
 			
@@ -17,7 +17,7 @@ namespace test
 
 		public static TestResult variableToVariableAssign()
 		{
-			var retVal = TestRunner.Test("var1=123\nvar2=456\nvar1=var2");
+			var retVal = TestRunner.Test("var1:=123\nvar2:=456\nvar1:=var2");
 			if (retVal.result == TestResult.Exception)
 				return TestResult.Exception;
 			
@@ -28,7 +28,7 @@ namespace test
 
 		public static TestResult classVariableAssign()
 		{
-			var retVal = TestRunner.Test("var=class.var1\nclass class{var1=123}");
+			var retVal = TestRunner.Test("var:=class.var1\nclass class{var1:=123}");
 			if (retVal.result == TestResult.Exception)
 				return TestResult.Exception;
 			
@@ -39,7 +39,7 @@ namespace test
 
 		public static TestResult classVariableToVariableAssign()
 		{
-			var retVal = TestRunner.Test("var=456\nclass.var1=123\nvar=class.var1\nclass class{}");
+			var retVal = TestRunner.Test("var:=456\nclass.var1:=123\nvar:=class.var1\nclass class{}");
 			if (retVal.result == TestResult.Exception)
 				return TestResult.Exception;
 			

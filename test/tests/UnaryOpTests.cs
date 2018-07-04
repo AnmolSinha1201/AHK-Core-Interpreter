@@ -6,7 +6,7 @@ namespace test
 	{
 		public static TestResult unaryOpTest1()
 		{
-			var retVal = TestRunner.Test("var=122\n++var");
+			var retVal = TestRunner.Test("var:=122\n++var");
 			if (retVal.result == TestResult.Exception)
 				return TestResult.Exception;
 			
@@ -17,7 +17,7 @@ namespace test
 
 		public static TestResult unaryOpTest2()
 		{
-			var retVal = TestRunner.Test("var=124\n--var");
+			var retVal = TestRunner.Test("var:=124\n--var");
 			if (retVal.result == TestResult.Exception)
 				return TestResult.Exception;
 			
@@ -28,7 +28,7 @@ namespace test
 
 		public static TestResult unaryOpTest3()
 		{
-			var retVal = TestRunner.Test("var2=124\nvar=--var2");
+			var retVal = TestRunner.Test("var2:=124\nvar:=--var2");
 			if (retVal.result == TestResult.Exception)
 				return TestResult.Exception;
 			
@@ -39,7 +39,7 @@ namespace test
 
 		public static TestResult unaryOpTest4()
 		{
-			var retVal = TestRunner.Test("var2=-123\nvar=-var2");
+			var retVal = TestRunner.Test("var2:=-123\nvar:=-var2");
 			if (retVal.result == TestResult.Exception)
 				return TestResult.Exception;
 			
@@ -50,7 +50,7 @@ namespace test
 
 		public static TestResult unaryOpTest5()
 		{
-			var retVal = TestRunner.Test("var2=123\nvar=!var2");
+			var retVal = TestRunner.Test("var2:=123\nvar:=!var2");
 			if (retVal.result == TestResult.Exception)
 				return TestResult.Exception;
 			
@@ -61,7 +61,7 @@ namespace test
 
 		public static TestResult unaryOpTest6()
 		{
-			var retVal = TestRunner.Test("var2=123\nvar=~var2");
+			var retVal = TestRunner.Test("var2:=123\nvar:=~var2");
 			if (retVal.result == TestResult.Exception)
 				return TestResult.Exception;
 			
@@ -72,7 +72,7 @@ namespace test
 
 		public static TestResult unaryOpTest7()
 		{
-			var retVal = TestRunner.Test("var2=123\nvar=var2--");
+			var retVal = TestRunner.Test("var2:=123\nvar:=var2--");
 			if (retVal.result == TestResult.Exception)
 				return TestResult.Exception;
 			
@@ -84,7 +84,7 @@ namespace test
 
 		public static TestResult unaryOpTest8()
 		{
-			var retVal = TestRunner.Test("var2=123\nvar=var2++");
+			var retVal = TestRunner.Test("var2:=123\nvar:=var2++");
 			if (retVal.result == TestResult.Exception)
 				return TestResult.Exception;
 			

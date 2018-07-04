@@ -6,7 +6,7 @@ namespace test
 	{
 		public static TestResult basicNewObject()
 		{
-			var retVal = TestRunner.Test("var2=new class()\nvar=var2.var1\nclass class{var1=123}}");
+			var retVal = TestRunner.Test("var2:=new class()\nvar:=var2.var1\nclass class{var1:=123}}");
 			if (retVal.result == TestResult.Exception)
 				return TestResult.Exception;
 			
@@ -17,7 +17,7 @@ namespace test
 
 		public static TestResult basicNewObjectVariableChange()
 		{
-			var retVal = TestRunner.Test("var2=new class()\nclass.var1=456\nvar=var2.var1\nclass class{var1=123}}");
+			var retVal = TestRunner.Test("var2:=new class()\nclass.var1:=456\nvar:=var2.var1\nclass class{var1:=123}}");
 			if (retVal.result == TestResult.Exception)
 				return TestResult.Exception;
 			
