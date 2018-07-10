@@ -47,9 +47,9 @@ namespace AHKCore
 			foreach (var functionNode in function.functionBody)
 			{
 				var retVal = traverser.objectDispatcher(functionNode);
-				if (retVal is returnBlockClass r)
+				if (retVal.extraInfo is returnBlockClass r)
 				{
-					context.extraInfo = r.extraInfo;
+					context.extraInfo = r.expression?.extraInfo;
 					break;
 				}
 			}
@@ -128,7 +128,7 @@ namespace AHKCore
 
 		public override returnBlockClass returnBlock(returnBlockClass context)
 		{
-			context.extraInfo = context.expression.extraInfo;
+			context.extraInfo = context;
 			return context;
 		}
 	}
