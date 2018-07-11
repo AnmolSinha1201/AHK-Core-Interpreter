@@ -12,9 +12,7 @@ namespace AHKCore
 		public override variableAssignClass variableAssign(variableAssignClass context)
 		{
 			context.complexVariable = complexVariable(context.complexVariable);
-
-			if (context.expression.extraInfo == null)
-				context.expression = expression(context.expression);
+			context.expression = expression(context.expression);
 
 			return visitor.variableAssign(context);
 		}

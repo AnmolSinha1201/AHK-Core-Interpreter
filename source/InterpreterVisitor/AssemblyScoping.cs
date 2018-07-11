@@ -78,6 +78,7 @@ namespace AHKCore
 
 			for (int i = 0; i < functionParameterList.Count; i++)
 			{
+				traverser.objectDispatcher(functionParameterList[i]);
 				switch (functionParameterList[i])
 				{
 					case complexVariableClass o:

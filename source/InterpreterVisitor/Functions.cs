@@ -99,9 +99,6 @@ namespace AHKCore
 
 		public override complexFunctionCallClass complexFunctionCall(complexFunctionCallClass context)
 		{
-			for (int i = 0; i < context.functionParameterList.Count; i++)
-				context.functionParameterList[i] = traverser.objectDispatcher(context.functionParameterList[i]);
-			
 			var scope = scopeChain(context.chain);
 
 			BaseAHKNode retVal = null;
