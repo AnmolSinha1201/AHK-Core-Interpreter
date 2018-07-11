@@ -8,7 +8,7 @@ namespace test
 	{
 		static void Main(string[] args)
 		{
-			Test.TestFunction(TestCases.ifElseTest5);
+			Test.TestFunction(TestCases.assemblyIncludeTest);
 			Test.TestAll();
 		}
 	}
