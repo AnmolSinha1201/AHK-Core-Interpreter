@@ -43,5 +43,36 @@ namespace AHKCore
 
 			return context;
 		}
+
+		public override whileLoopClass whileLoop(whileLoopClass context)
+		{
+			while (isTrue(traverser.objectDispatcher(context.condition)))
+			{
+				context.extraInfo = null;
+				foreach (var node in context.loopBody)
+				{
+					var retVal = traverser.objectDispatcher(node);
+
+					if (retVal.extraInfo is returnBlockClass || retVal.extraInfo is breakBlockClass 
+					|| retVal.extraInfo is continueBlockClass)
+					{
+						context.extraInfo = retVal.extraInfo;
+						break;
+					}
+				}
+
+				if (context.extraInfo == null)
+					continue;
+				
+				if (context.extraInfo is returnBlockClass)
+					return context;
+				if (context.extraInfo is breakBlockClass)
+					break;
+				if (context.extraInfo is continueBlockClass)
+					continue;
+			}
+
+			return context;
+		}
 	}
 }

@@ -8,5 +8,10 @@ namespace AHKCore
 		{
 			return visitor.loopLoop(context);
 		}
+
+		public override whileLoopClass whileLoop(whileLoopClass context)
+		{
+			return visitor.whileLoop(context);
+		}
 	}
 }
