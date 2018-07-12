@@ -14,5 +14,16 @@ namespace test
 				return TestResult.Failed;
 			return TestResult.Passed;
 		}
+
+		public static TestResult whileLoopTest1()
+		{
+			var retVal = TestRunner.Test("var:=1\nwhile(var!=4){var:=var+1}");
+			if (retVal.result == TestResult.Exception)
+				return TestResult.Exception;
+			
+			if (retVal.indexed.Variables["var"].Value.ToString() != "4")
+				return TestResult.Failed;
+			return TestResult.Passed;
+		}
 	}
 }
