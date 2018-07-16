@@ -38,7 +38,9 @@ namespace AHKCore
 		public functionCallClass functionCallAHK(functionCallClass context)
 		{
 			IndexedNode scope = (IndexedNode)context.extraInfo;
-			var function = scope.Functions[context.functionName][0];
+			var function = getCorrectFunctionOverload(scope.Functions[context.functionName], context);
+			if (function == null){} //incorrect overload error
+
 			scope = new IndexedNode();
 
 			var parameterVariableAssignList = addParams(context, function);
@@ -55,6 +57,25 @@ namespace AHKCore
 			}
 			
 			return context;
+		}
+
+		functionDeclarationClass getCorrectFunctionOverload(List<functionDeclarationClass> functionList, functionCallClass functionCall)
+		{			
+			var retList = new List<functionDeclarationClass>();
+			var callParamCount = functionCall.functionParameterList.Count;
+
+			foreach (var function in functionList)
+			{
+				var requiredParams = function.functionHead.functionParameters.Where(i => !i.isVariadic && i.expression == null).Count();
+				var totalParams = function.functionHead.functionParameters.Count;
+
+				if (callParamCount == requiredParams)
+					retList.Add(function);
+				else if (callParamCount > requiredParams && callParamCount <= totalParams)
+					retList.Add(function);
+			}
+
+			return retList.OrderBy(i => i.functionHead.functionParameters.Count).FirstOrDefault();
 		}
 
 		List<variableAssignClass> addParams(functionCallClass functionCall, functionDeclarationClass function)
