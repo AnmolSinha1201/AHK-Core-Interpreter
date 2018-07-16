@@ -113,5 +113,16 @@ namespace test
 				return TestResult.Failed;
 			return TestResult.Passed;
 		}
+
+		public static TestResult functionOverloadingTest1()
+		{
+			var retVal = TestRunner.Test("var:=function()\nvar:=function(var)\nfunction(){return 122}\nfunction(var1){return var1+1}");
+			if (retVal.result == TestResult.Exception)
+				return TestResult.Exception;
+			
+			if (retVal.indexed.Variables["var"].Value.ToString() != "123")
+				return TestResult.Failed;
+			return TestResult.Passed;
+		}
 	}
 }
