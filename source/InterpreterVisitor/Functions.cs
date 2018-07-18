@@ -41,10 +41,18 @@ namespace AHKCore
 			var function = getCorrectFunctionOverload(scope.Functions[context.functionName], context);
 			if (function == null){} //incorrect overload error
 
-			scope = new IndexedNode();
+			foreach (var exp in context.functionParameterList)
+				traverser.objectDispatcher(exp);
+			
+			// var parameterVariableAssignList = addParams(context, function);
+			// function.functionBody = parameterVariableAssignList.Concat(function.functionBody).ToList();
 
-			var parameterVariableAssignList = addParams(context, function);
-			function.functionBody = parameterVariableAssignList.Concat(function.functionBody).ToList();
+			var oIndexed = indexed;
+			indexed = new IndexedNode();
+			indexed.Functions = oIndexed.Functions;
+			indexed.Classes = oIndexed.Classes;
+
+			setParameters(context, function);
 
 			foreach (var functionNode in function.functionBody)
 			{
@@ -55,7 +63,8 @@ namespace AHKCore
 					break;
 				}
 			}
-			
+
+			indexed = oIndexed;			
 			return context;
 		}
 
@@ -78,44 +87,34 @@ namespace AHKCore
 			return retList.OrderBy(i => i.functionHead.functionParameters.Count).FirstOrDefault();
 		}
 
-		List<variableAssignClass> addParams(functionCallClass functionCall, functionDeclarationClass function)
+		void setParameters(functionCallClass functionCall, functionDeclarationClass function)
 		{
-			var noDefaultList = addNoDefaultParams(functionCall, function.functionHead.functionParameters.Where(
-				o => o.expression == null && o.isVariadic == false).ToList());
+			if (function.functionHead.functionParameters.Count == 0)
+				return;
 
-			var defaultParamList = addDefaultParams(functionCall, function.functionHead.functionParameters.Where(
-				o => o.expression != null).ToList());
+			if (function.functionHead.functionParameters.Count < functionCall.functionParameterList.Count
+			&& !function.functionHead.functionParameters.Last().isVariadic)
+			{ return; } //error: signature mismatch
 
-			return noDefaultList.Concat(defaultParamList).ToList();
-		}
-
-		List<variableAssignClass> addNoDefaultParams(functionCallClass functionCall, List<parameterInfoClass> functionParams)
-		{
-			var noDefaultParamList = new List<variableAssignClass>();
-			foreach (var functionParam in functionParams)
+			// no default parameters or overriden default parameters
+			for (int i = 0; i < functionCall.functionParameterList.Count; i++)
 			{
-				if (functionCall.functionParameterList.Count == 0)
-					break;
-				noDefaultParamList.Add(assignVariable(functionParam.variableName, functionCall.functionParameterList[0]));
-				functionCall.functionParameterList.RemoveAt(0);
+				var _variable = variable(function.functionHead.functionParameters[i].variableName);
+				var exp = functionCall.functionParameterList[i].extraInfo;
+				exp = exp is VariableValue? ((VariableValue)exp).Value : exp;
+
+				((VariableValue)_variable.extraInfo).Value = exp;
 			}
 
-			return noDefaultParamList;
-		}
+			// default parameters
+			for (int i = functionCall.functionParameterList.Count; i < function.functionHead.functionParameters.Count; i++)
+			{
+				var _variable = variable(function.functionHead.functionParameters[i].variableName);
+				var exp = traverser.objectDispatcher(function.functionHead.functionParameters[i].expression).extraInfo;
+				exp = exp is VariableValue? ((VariableValue)exp).Value : exp;
 
-		List<variableAssignClass> addDefaultParams(functionCallClass functionCall, List<parameterInfoClass> functionParams)
-		{
-			var defaultParamList = new List<variableAssignClass>();
-
-			foreach (var functionParam in functionParams)
-				defaultParamList.Add(assignVariable(functionParam.variableName, functionParam.expression));
-
-			return defaultParamList.Concat(addNoDefaultParams(functionCall, functionParams)).ToList();
-		}
-
-		variableAssignClass assignVariable(variableClass name, BaseAHKNode expression)
-		{
-			return new variableAssignClass(new complexVariableClass(null, new List<BaseAHKNode>() {name}), "=", expression);
+				((VariableValue)_variable.extraInfo).Value = exp;
+			}
 		}
 
 		public override complexFunctionCallClass complexFunctionCall(complexFunctionCallClass context)
