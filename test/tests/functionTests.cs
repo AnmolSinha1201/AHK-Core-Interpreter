@@ -124,5 +124,49 @@ namespace test
 				return TestResult.Failed;
 			return TestResult.Passed;
 		}
+
+		public static TestResult multipleFunctionsTest1()
+		{
+			var retVal = TestRunner.Test("var:=function()\nfunction(){return function(122)}\nfunction(var1){return var1+1}");
+			if (retVal.result == TestResult.Exception)
+				return TestResult.Exception;
+			
+			if (retVal.indexed.Variables["var"].Value.ToString() != "123")
+				return TestResult.Failed;
+			return TestResult.Passed;
+		}
+
+		public static TestResult multipleFunctionsTest2()
+		{
+			var retVal = TestRunner.Test("var:=class.function()\nclass class{function(){return function(122)}}\nfunction(var1){return var1+1}");
+			if (retVal.result == TestResult.Exception)
+				return TestResult.Exception;
+			
+			if (retVal.indexed.Variables["var"].Value.ToString() != "123")
+				return TestResult.Failed;
+			return TestResult.Passed;
+		}
+
+		public static TestResult multipleFunctionsTest3()
+		{
+			var retVal = TestRunner.Test("var:=class.function()\nclass class{function(){return this.function(122)}\nfunction(var1){return var1+1}}");
+			if (retVal.result == TestResult.Exception)
+				return TestResult.Exception;
+			
+			if (retVal.indexed.Variables["var"].Value.ToString() != "123")
+				return TestResult.Failed;
+			return TestResult.Passed;
+		}
+		
+		public static TestResult classFunctionCall6()
+		{
+			var retVal = TestRunner.Test("var:=class.function()\nclass class{var:=123\nfunction(){return this.var}}");
+			if (retVal.result == TestResult.Exception)
+				return TestResult.Exception;
+			
+			if (retVal.indexed.Variables["var"].Value.ToString() != "123")
+				return TestResult.Failed;
+			return TestResult.Passed;
+		}
 	}
 }

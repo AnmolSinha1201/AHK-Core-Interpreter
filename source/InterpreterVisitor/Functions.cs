@@ -121,6 +121,9 @@ namespace AHKCore
 		public override complexFunctionCallClass complexFunctionCall(complexFunctionCallClass context)
 		{
 			var scope = scopeChain(context.chain, context._this == null? indexed : indexed.Parent);
+			// in case of this.function() in a class method
+			if (context._this != null && scope == null && indexed.Parent != null)
+				scope = indexed.Parent;
 
 			BaseAHKNode retVal = null;
 			switch (context.function)
