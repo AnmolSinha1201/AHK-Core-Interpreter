@@ -33,7 +33,7 @@ namespace AHKCore
 
 		public override complexVariableClass complexVariable(complexVariableClass context)
 		{
-			var scope = scopeChain(context.chain);
+			var scope = scopeChain(context.chain, context._this == null? indexed : indexed.Parent);
 			
 			BaseAHKNode retVal = null;
 			switch(context.variable)

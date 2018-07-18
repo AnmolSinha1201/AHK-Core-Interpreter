@@ -51,6 +51,7 @@ namespace AHKCore
 			indexed = new IndexedNode();
 			indexed.Functions = oIndexed.Functions;
 			indexed.Classes = oIndexed.Classes;
+			indexed.Parent = scope;
 
 			setParameters(context, function);
 
@@ -119,7 +120,7 @@ namespace AHKCore
 
 		public override complexFunctionCallClass complexFunctionCall(complexFunctionCallClass context)
 		{
-			var scope = scopeChain(context.chain);
+			var scope = scopeChain(context.chain, context._this == null? indexed : indexed.Parent);
 
 			BaseAHKNode retVal = null;
 			switch (context.function)

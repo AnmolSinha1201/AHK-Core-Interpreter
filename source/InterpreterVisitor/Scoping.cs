@@ -15,12 +15,12 @@ namespace AHKCore
 			- Check if the chainLink is a AHK node or assembly type/instance.
 			- TODO : Add functions as a valid chainLink (already supporeted by parser)
 		 */
-		object scopeChain(List<BaseAHKNode> chain)
+		object scopeChain(List<BaseAHKNode> chain, IndexedNode startingScope)
 		{
 			if (chain.Count == 0)
 				return null;
 			
-			object scope = indexed;
+			object scope = startingScope;
 			foreach (var chainLink in chain)
 			{
 				if (chainLink is variableClass v)

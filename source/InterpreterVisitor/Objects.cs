@@ -24,7 +24,7 @@ namespace AHKCore
 			for (int i = 0; i < parameterList.Count; i++)
 				parameterList[i] = traverser.objectDispatcher(parameterList[i]);
 			
-			var scope = scopeChain(context.chain);
+			var scope = scopeChain(context.chain, indexed);
 
 			BaseAHKNode retVal = null;
 			switch (context.className)
