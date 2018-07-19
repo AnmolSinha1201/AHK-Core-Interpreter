@@ -8,7 +8,7 @@ namespace test
 	{
 		static void Main(string[] args)
 		{
-			Test.TestFunction(TestCases.multipleFunctionsTest3);
+			Test.TestFunction(TestCases.assemblyMultiInclude);
 			Test.TestAll();
 		}
 	}
