@@ -20,6 +20,10 @@ namespace AHKCore
 			{
 				if (_type.IsNested)
 					continue;
+				
+				if (_type.Name.ToLower() == "functions")
+					continue;
+				
 				Type[_type.Name] = _type;
 			}
 		}
