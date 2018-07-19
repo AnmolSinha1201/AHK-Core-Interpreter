@@ -17,7 +17,10 @@ namespace test
 				retVal.indexed = indexed;
 			}
 			catch (Exception e)
-			{ retVal.result = TestResult.Exception;	}
+			{ 
+				Console.WriteLine(e.Message);
+				retVal.result = TestResult.Exception;	
+			}
 
 			return retVal;
 		}
