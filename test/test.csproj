@@ -9,6 +9,7 @@
 	<ItemGroup>
 		<Reference Include="dependencies\AHKCore.dll" />
 		<Reference Include="dependencies\Stub.dll" />
+		<Reference Include="dependencies\Stub2.dll" />
 		<ProjectReference Include="..\source\source.csproj" />
 	</ItemGroup>
 </Project>
